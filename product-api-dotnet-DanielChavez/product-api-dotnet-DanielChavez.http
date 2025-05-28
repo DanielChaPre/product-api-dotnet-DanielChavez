@@ -1,0 +1,6 @@
+@product_api_dotnet_DanielChavez_HostAddress = http://localhost:5219
+
+GET {{product_api_dotnet_DanielChavez_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
