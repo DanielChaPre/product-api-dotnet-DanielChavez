@@ -88,5 +88,49 @@ namespace product_api_dotnet_DanielChavez.Data
             }
             return respuesta;
         }
+
+        /// <summary>
+        ///     En este metodo se creara un nuevo producto en la base de datos
+        /// </summary>
+        /// <param name="item"> item es de tipo ProductDTO, este parametro almacena los valores para el registro de un nuevo producto </param>
+        /// <returns> El valor de retorno es un tipo RespuestaDTO, el cual mostrara principalmente el codigo y mensaje de la ejecucion del metodo </returns>
+        public RespuestaDTO CreateProduct(ProductDTO item)
+        {
+            var dato = new RespuestaDTO();
+            try
+            {
+                //Creamos un nuevo producto con los datos del DTO
+                var producto = new Product
+                {
+                    Id = 0,
+                    Nombre = item.Nombre,
+                    Activo = 1,
+                    Precio = item.Precio,
+                    Stock = item.Stock,
+                };
+
+                //Agregamos el producto al contexto y guardamos los cambios
+                _context.Products.Add(producto);
+                _context.SaveChanges();
+
+                //Asignamos la respuesta de exito
+                dato = new RespuestaDTO
+                {
+                    Codigo = "1",
+                    Mensaje = "El producto se guardo de manera correcta",
+                    Data = null
+                };
+            }
+            catch (Exception ex)
+            {
+                dato = new RespuestaDTO
+                {
+                    Codigo = "-1",
+                    Mensaje = "Error al guardar el producto: " + ex.Message,
+                    Data = null
+                };
+            }
+            return dato;
+        }
     }
 }

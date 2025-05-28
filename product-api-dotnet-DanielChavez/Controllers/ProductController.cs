@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using product_api_dotnet_DanielChavez.Data;
+using product_api_dotnet_DanielChavez.DTOs;
 
 namespace product_api_dotnet_DanielChavez.Controllers
 {
@@ -47,7 +48,7 @@ namespace product_api_dotnet_DanielChavez.Controllers
         ///     El valor de retorno es un objeto de tipo IActionResult que mostraria el estatus de la respuesta HTTP.
         /// </returns>
         [HttpGet]
-        [Route("product/{id}")]
+        [Route("products/{id}")]
         public IActionResult GetProduct(int id)
         {
             // Llamamos al método de acceso a datos para obtener un producto por su ID
@@ -59,6 +60,31 @@ namespace product_api_dotnet_DanielChavez.Controllers
             else if (respuesta.Codigo == "0")
             {
                 return NotFound(respuesta);
+            }
+            else
+            {
+                return BadRequest(respuesta);
+            }
+        }
+        /// <summary>
+        ///     Este metodo nos permite comunicar con el metodo en Data para crear un nuevo producto
+        /// </summary>
+        /// <param name="product"> este parametro contendra la informacion para crear un nuevo producto </param>
+        /// <returns> El valor de retorno es un objeto de tipo IActionResult que mostraria el estatus de la respuesta HTTP. </returns>
+        [HttpPost]
+        [Route("products")]
+        public IActionResult CreateProduct([FromBody] ProductDTO product)
+        {
+            // Validamos si el modelo es válido
+            if (product == null)
+            {
+                return BadRequest(new { Codigo = "0", Mensaje = "Producto no puede ser nulo." });
+            }
+            // Llamamos al método de acceso a datos para crear un nuevo producto
+            var respuesta = _data.CreateProduct(product);
+            if (respuesta.Codigo == "1")
+            {
+                return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, respuesta);
             }
             else
             {
