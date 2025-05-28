@@ -150,5 +150,28 @@ namespace product_api_dotnet_DanielChavez.Controllers
                 return BadRequest(respuesta);
             }
         }
-    }
+        /// <summary>
+        ///     Metodo que nos permite comunicar con el metodo en Data para poder eliminar un producto en la base de datos
+        /// </summary>
+        /// <param name="id"> Parametro que identifica al id del producto que se eliminara de la base de datos </param>
+        /// <returns> El valor de retorno es un objeto de tipo IActionResult que mostraria el estatus de la respuesta HTTP.
+        [HttpDelete]
+        [Route("products/{id}")]
+        public IActionResult DeleteProduct(int id)
+        {
+            // Llamamos al método de acceso a datos para eliminar un producto
+            var respuesta = _data.DeleteProduct(id);
+            if (respuesta.Codigo == "1")
+            {
+                return Ok(respuesta);
+            }
+            else if (respuesta.Codigo == "0")
+            {
+                return NotFound(respuesta);
+            }
+            else
+            {
+                return BadRequest(respuesta);
+            }
+        }
 }

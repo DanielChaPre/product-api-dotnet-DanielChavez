@@ -259,5 +259,54 @@ namespace product_api_dotnet_DanielChavez.Data
             }
             return dato;
         }
+
+        /// <summary>
+        ///     El metodo nos permite eliminar un producto de la base de datos por su id
+        /// </summary>
+        /// <param name="id"> La variable hace referencia al id del producto  </param>
+        /// <returns></returns>
+        public RespuestaDTO DeleteProduct(int id)
+        {
+            var dato = new RespuestaDTO();
+            try
+            {
+                //Buscamos el producto por id
+                var productBD = (Product)GetProductById(id).Data;
+                if (productBD != null)
+                {
+                    //Adjuntamos el producto al contexto para marcarlo como eliminado
+                    _context.Products.Attach(productBD);
+                    // Eliminamos el producto del contexto
+                    _context.Products.Remove(productBD);
+                    // Guardamos los cambios en la base de datos
+                    _context.SaveChanges();
+                    dato = new RespuestaDTO
+                    {
+                        Codigo = "1",
+                        Mensaje = "Se elimino de manera correcta el producto",
+                        Data = null
+                    };
+                }
+                else
+                {
+                    dato = new RespuestaDTO
+                    {
+                        Codigo = "0",
+                        Mensaje = "No se encontro el producto que se desea eliminar",
+                        Data = null
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                dato = new RespuestaDTO
+                {
+                    Codigo = "-1",
+                    Mensaje = "Error al eliminar el producto: " + ex.Message,
+                    Data = null
+                };
+            }
+            return dato;
+        }
     }
 }
