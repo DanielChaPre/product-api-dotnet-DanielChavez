@@ -132,5 +132,132 @@ namespace product_api_dotnet_DanielChavez.Data
             }
             return dato;
         }
+
+        /// <summary>
+        ///     Metodo que nos permite actualizar un producto en la base de datos
+        /// </summary>
+        /// <param name="id"> es el parametro que utilizaremos para poder buscar e identificar el producto que se modificara </param>
+        /// <param name="item"> En este parametro contendra los datos que se modificaran </param>
+        /// <returns> se retornara un objeto de tipo RespuestaDTO el cual mostrara el codigo y mensaje indicando si se realizo correctamente 
+        ///     la actualizacion del producto o si ocurrio un error durante el proceso.
+        /// </returns>
+        public RespuestaDTO UpdateProduct(int id, ProductDTO item)
+        {
+            var dato = new RespuestaDTO();
+            try
+            {
+                //Buscamos el producto por id
+                var productBD = (Product)GetProductById(id).Data;
+                if (productBD != null)
+                {
+                    //Actualizamos los campos del producto
+                    productBD.Activo = (item.Activo = true) ? 1 : 0;
+                    productBD.Precio = item.Precio;
+                    productBD.Stock = item.Stock;
+                    productBD.Nombre = item.Nombre;
+
+                    // Adjuntamos el producto al contexto para marcarlo como modificado
+                    _context.Products.Attach(productBD);
+
+                    // Especificamos qué propiedades han sido modificadas
+                    _context.Entry(productBD).Property(p => p.Activo).IsModified = true;
+                    _context.Entry(productBD).Property(p => p.Precio).IsModified = true;
+                    _context.Entry(productBD).Property(p => p.Stock).IsModified = true;
+                    _context.Entry(productBD).Property(p => p.Nombre).IsModified = true;
+
+                    // Guardamos los cambios en la base de datos
+                    _context.SaveChanges();
+
+                    dato = new RespuestaDTO
+                    {
+                        Codigo = "1",
+                        Mensaje = "Se modifico de manera correcta el producto",
+                        Data = null
+                    };
+                }
+                else
+                {
+                    dato = new RespuestaDTO
+                    {
+                        Codigo = "0",
+                        Mensaje = "No se encontro el producto que se desea modificar",
+                        Data = null
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                dato = new RespuestaDTO
+                {
+                    Codigo = "-1",
+                    Mensaje = "Error al actualizar el producto: " + ex.Message,
+                    Data = null
+                };
+            }
+            return dato;
+        }
+
+        /// <summary>
+        ///     Metodo que nos permite actualizar el estado de un producto en la base de datos
+        /// </summary>
+        /// <param name="id"> es el parametro que utilizaremos para poder buscar e identificar el producto que se modificara </param>
+        /// <returns> se retornara un objeto de tipo RespuestaDTO el cual mostrara el codigo y mensaje indicando si se realizo correctamente 
+        ///     la actualizacion del producto o si ocurrio un error durante el proceso.
+        /// </returns>
+        public RespuestaDTO UpdateStatusProduct(int id)
+        {
+            var dato = new RespuestaDTO();
+            try
+            {
+                //Buscamos el producto por id
+                var productBD = (Product)GetProductById(id).Data;
+                if (productBD != null)
+                {
+                    // Cambiamos el estado del producto (Activo a Inactivo o viceversa)
+                    if (productBD.Activo == 1)
+                    {
+                        productBD.Activo = 0;
+                    }
+                    else if (productBD.Activo == 0)
+                    {
+                        productBD.Activo = 1;
+                    }
+                    // Adjuntamos el producto al contexto para marcarlo como modificado
+                    _context.Products.Attach(productBD);
+
+                    // Especificamos qué propiedades han sido modificadas
+                    _context.Entry(productBD).Property(p => p.Activo).IsModified = true;
+
+                    // Guardamos los cambios en la base de datos
+                    _context.SaveChanges();
+
+                    dato = new RespuestaDTO
+                    {
+                        Codigo = "1",
+                        Mensaje = "Se modifico de manera correcta el producto",
+                        Data = null
+                    };
+                }
+                else
+                {
+                    dato = new RespuestaDTO
+                    {
+                        Codigo = "0",
+                        Mensaje = "No se encontro el producto que se desea modificar",
+                        Data = null
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                dato = new RespuestaDTO
+                {
+                    Codigo = "-1",
+                    Mensaje = "Error al actualizar el estado del producto: " + ex.Message,
+                    Data = null
+                };
+            }
+            return dato;
+        }
     }
 }
