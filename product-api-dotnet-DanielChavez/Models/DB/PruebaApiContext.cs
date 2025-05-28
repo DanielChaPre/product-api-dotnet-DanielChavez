@@ -14,7 +14,10 @@ public partial class PruebaApiContext : DbContext
         var builder = WebApplication.CreateBuilder();
 
         // Obtener la cadena de conexion desde el archivo appsettings.json
-        connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
+                           builder.Configuration.GetConnectionString("DefaultConnection");
+
+        //connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     }
 
     public PruebaApiContext(DbContextOptions<PruebaApiContext> options)

@@ -7,6 +7,7 @@
     <RootNamespace>product_api_dotnet_DanielChavez</RootNamespace>
     <UserSecretsId>c7baf8cb-92a1-42b1-a808-bf6fdadcb828</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>

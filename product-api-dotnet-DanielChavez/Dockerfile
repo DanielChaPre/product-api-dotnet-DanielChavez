@@ -6,6 +6,7 @@ USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
+ENV DB_CONNECTION_STRING="Server=PruebaApi.mssql.somee.com; Database=PruebaApi; TrustServerCertificate=True;User ID=dchavez_SQLLogin_1;Password=mo5zfbasng;"
 
 
 # Esta fase se usa para compilar el proyecto de servicio

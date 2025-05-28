@@ -1,0 +1,13 @@
+networks:
+  mynetworkapi:
+
+services:
+  product-api-dotnet-danielchavez:
+    image: ${DOCKER_REGISTRY-}productapidotnetdanielchavez
+    build:
+      context: .
+      dockerfile: product-api-dotnet-DanielChavez/Dockerfile
+    networks:
+        - mynetworkapi
+    ports:
+     - "5001:8081"
